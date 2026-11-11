@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ page.summary | default: site.description | escape }}">
+  <title>{% if page.title %}{{ page.title | escape }} · {% endif %}{{ site.title | escape }}</title>
+  <link rel="stylesheet" href="{{ '/assets/style.css' | relative_url }}">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <a class="brand" href="{{ '/' | relative_url }}"><span aria-hidden="true">✦</span> {{ site.title | escape }}</a>
+    <a href="{{ '/' | relative_url }}#posts">All posts</a>
+  </header>
+  <main class="wrap" id="main">
+    {{ content }}
+  </main>
+  <footer class="site-footer wrap">
+    <span>Created by RBC Studios</span>
+    <span>{{ site.author | escape }}</span>
+  </footer>
+</body>
+</html>
