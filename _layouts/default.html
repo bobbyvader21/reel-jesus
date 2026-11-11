@@ -10,7 +10,16 @@
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <header class="site-header wrap">
-    <a class="brand" href="{{ '/' | relative_url }}"><span aria-hidden="true">✦</span> {{ site.title | escape }}</a>
+    <a class="brand" href="{{ '/' | relative_url }}">
+      <img
+        class="brand-logo"
+        src="{{ '/assets/reel-jesus-logo.png' | relative_url }}"
+        alt=""
+        width="32"
+        height="32"
+      >
+      {{ site.title | escape }}
+    </a>
     <a href="{{ '/' | relative_url }}#posts">All posts</a>
   </header>
   <main class="wrap" id="main">
