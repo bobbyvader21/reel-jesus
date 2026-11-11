@@ -47,7 +47,11 @@ img { display: block; max-width: 100%; height: auto; }
 .feed h2 { margin: 0 0 20px; font-size: clamp(1.65rem, 5vw, 2.5rem); letter-spacing: -.045em; }
 .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 285px), 1fr)); gap: 24px; }
 .card { overflow: hidden; border-bottom: 1px solid var(--line); }
-.card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
 .card-body { padding: 14px 0 20px; }
 .card time { font-size: .84rem; color: var(--muted); }
 .card h3 { margin: 4px 0; line-height: 1.2; font-size: 1.35rem; }
