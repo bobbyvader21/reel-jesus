@@ -28,15 +28,42 @@ img { display: block; max-width: 100%; height: auto; }
   border-bottom: 1px solid var(--line);
 }
 
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 750; text-decoration: none; font-size: 1.2rem; }
-.brand span { color: var(--link); font-size: 1rem; }
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font-weight: 750;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.brand-logo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
 .site-header > a:last-child { font-weight: 650; text-decoration: none; }
 .site-header > a:last-child:hover { text-decoration: underline; }
 .site-footer { border-top: 1px solid var(--line); border-bottom: 0; color: var(--muted); font-size: .9rem; }
 
-.hero { position: relative; overflow: hidden; padding: clamp(34px, 8vw, 88px) 0; border-bottom: 1px solid var(--line); }
-.hero-copy { position: relative; z-index: 1; }
-.hero-mark { position: absolute; right: .12em; top: 50%; transform: translateY(-50%); color: #ebebf7; font-size: clamp(110px, 25vw, 320px); line-height: 1; }
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 32%);
+  align-items: center;
+  gap: clamp(20px, 4vw, 48px);
+  padding: clamp(34px, 8vw, 88px) 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.hero-logo {
+  width: min(100%, 300px);
+  height: auto;
+  justify-self: center;
+}
+
 .hero h1, .post h1 { margin: 8px 0 15px; font-size: clamp(2.7rem, 8vw, 6rem); font-weight: 700; letter-spacing: -.065em; line-height: 1; overflow-wrap: anywhere; }
 .hero p { max-width: 34ch; font-size: 1.18rem; }
 .eyebrow { margin: 0; color: var(--link); font-size: .78rem; font-weight: 700; letter-spacing: .095em; text-transform: uppercase; }
@@ -85,8 +112,12 @@ img { display: block; max-width: 100%; height: auto; }
 .prose blockquote { margin-inline: 0; padding-left: 16px; border-left: 3px solid var(--link); color: var(--muted); }
 .article-section + .article-section { margin-top: 1.8em; }
 
+@media (max-width: 600px) {
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero-logo { width: min(100%, 180px); }
+}
+
 @media (max-width: 500px) {
   .wrap { width: calc(100% - 30px); }
-  .hero-mark { opacity: .65; }
   .post-summary { padding: 14px 16px; }
 }
