@@ -9,8 +9,8 @@ layout: default
   </div>
   <span class="hero-mark" aria-hidden="true">✦</span>
 </section>
+
 <section class="feed" id="posts" aria-labelledby="posts-title">
-  <p class="eyebrow">FROM THE DESK</p>
   <h2 id="posts-title">Latest posts</h2>
   <div class="post-grid">
     {% for post in site.posts %}
@@ -21,7 +21,9 @@ layout: default
         <div class="card-body">
           <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%B %d, %Y' }}</time>
           <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
-          {% if post.summary and post.summary != empty %}<p>{{ post.summary | escape }}</p>{% endif %}
+          {% if post.summary and post.summary != empty %}
+            <p>{{ post.summary | escape }}</p>
+          {% endif %}
         </div>
       </article>
     {% else %}
