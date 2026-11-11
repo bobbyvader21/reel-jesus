@@ -41,8 +41,38 @@ content:
         type: string
         description: Describe the image for readers using a screen reader.
       - name: body
-        label: Post body
+        label: Introduction or existing post body
         type: rich-text
-        required: true
+        description: Optional text shown before the sections. Use this field to edit older posts.
         options:
           format: markdown
+      - name: sections
+        label: Article sections
+        type: object
+        description: Add a section for each heading, text passage, image, or divider.
+        list:
+          collapsible:
+            collapsed: false
+            summary: "Section {index} · {heading}"
+        fields:
+          - name: divider
+            label: Add a divider above this section
+            type: boolean
+          - name: heading
+            label: Section heading
+            type: string
+          - name: text
+            label: Section text
+            type: rich-text
+            description: Write paragraphs and add more headings or inline images here.
+            options:
+              format: markdown
+          - name: image
+            label: Section image
+            type: image
+          - name: image_alt
+            label: Image description
+            type: string
+          - name: caption
+            label: Image caption
+            type: string
