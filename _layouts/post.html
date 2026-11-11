@@ -2,17 +2,56 @@
 layout: default
 ---
 <article class="post">
-  <header>
+  <header class="post-header">
     <a class="back" href="{{ '/' | relative_url }}#posts">← All posts</a>
-    <p class="eyebrow"><time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %d, %Y' }}</time></p>
+    <p class="eyebrow">
+      <time datetime="{{ page.date | date: '%Y-%m-%d' }}">{{ page.date | date: '%B %d, %Y' }}</time>
+    </p>
     <h1>{{ page.title | escape }}</h1>
-    {% if page.summary and page.summary != empty %}<p class="standfirst">{{ page.summary | escape }}</p>{% endif %}
   </header>
-  {% if page.cover and page.cover != empty %}
-    <img class="post-cover" src="{{ page.cover | relative_url | escape }}" alt="{{ page.cover_alt | escape }}">
+
+  {% assign cover = page.cover | default: '' | strip %}
+  {% if cover != empty %}
+    <img class="post-cover" src="{{ cover | relative_url | escape }}" alt="{{ page.cover_alt | escape }}">
   {% endif %}
-  {% comment %}Prefix CMS-uploaded inline images with the GitHub Pages repository path.{% endcomment %}
+
+  {% assign summary = page.summary | default: '' | strip %}
+  {% if summary != empty %}
+    <aside class="post-summary" aria-labelledby="summary-heading">
+      <h2 id="summary-heading">Summary</h2>
+      <p>{{ summary | escape | newline_to_br }}</p>
+    </aside>
+  {% endif %}
+
   {% assign uploads_url = '/assets/uploads/' | relative_url %}
   {% assign upload_src = 'src="' | append: uploads_url %}
-  <div class="prose">{{ content | replace: 'src="/assets/uploads/', upload_src }}</div>
+  <div class="prose">
+    {{ content | replace: 'src="/assets/uploads/', upload_src }}
+
+    {% for part in page.sections %}
+      {% assign heading = part.heading | default: '' | strip %}
+      {% assign text = part.text | default: '' | strip %}
+      {% assign image = part.image | default: '' | strip %}
+      {% assign caption = part.caption | default: '' | strip %}
+
+      {% if part.divider == true %}<hr>{% endif %}
+
+      {% if heading != empty or text != empty or image != empty %}
+        <div class="article-section">
+          {% if heading != empty %}<h2>{{ heading | escape }}</h2>{% endif %}
+
+          {% if text != empty %}
+            {{ text | markdownify | replace: 'src="/assets/uploads/', upload_src }}
+          {% endif %}
+
+          {% if image != empty %}
+            <figure>
+              <img src="{{ image | relative_url | escape }}" alt="{{ part.image_alt | escape }}" loading="lazy">
+              {% if caption != empty %}<figcaption>{{ caption | escape }}</figcaption>{% endif %}
+            </figure>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
 </article>
