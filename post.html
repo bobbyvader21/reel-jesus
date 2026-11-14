@@ -1,0 +1,50 @@
+---
+layout: default
+title: All posts
+permalink: /posts/
+---
+
+<section class="feed" aria-labelledby="archive-title">
+  <h1 id="archive-title">All posts</h1>
+
+  <div class="post-grid">
+    {% for post in site.posts %}
+      <article class="card">
+        {% if post.cover and post.cover != empty %}
+          <img
+            src="{{ post.cover | relative_url | escape }}"
+            alt="{{ post.cover_alt | escape }}"
+            loading="lazy"
+          >
+        {% endif %}
+
+        <div class="card-body">
+          <time datetime="{{ post.date | date: '%Y-%m-%d' }}">
+            {{ post.date | date: '%B %d, %Y' }}
+          </time>
+          <h2><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h2>
+          {% if post.summary and post.summary != empty %}
+            <p>{{ post.summary | escape }}</p>
+          {% endif %}
+        </div>
+      </article>
+    {% else %}
+      <p>No posts yet. Check back soon.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<style>
+  .feed > h1 {
+    margin: 0 0 20px;
+    font-size: clamp(1.65rem, 5vw, 2.5rem);
+    letter-spacing: -.045em;
+  }
+
+  .feed .card h2 {
+    margin: 4px 0;
+    line-height: 1.2;
+    font-size: 1.35rem;
+    letter-spacing: normal;
+  }
+</style>
