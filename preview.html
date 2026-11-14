@@ -1,0 +1,171 @@
+---
+layout: default
+title: Post preview
+permalink: /preview/
+---
+<meta name="robots" content="noindex">
+<style>
+  .preview-workspace {
+    display: grid;
+    grid-template-columns: minmax(250px, 1fr) minmax(0, 2fr);
+    gap: 28px;
+    align-items: start;
+    padding-block: 24px;
+  }
+
+  .preview-editor label {
+    display: block;
+    margin-top: 14px;
+    font-weight: 650;
+  }
+
+  .preview-editor input,
+  .preview-editor textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--line);
+    font: inherit;
+  }
+
+  .preview-editor textarea { resize: vertical; }
+  .preview-result { min-width: 0; }
+
+  @media (max-width: 720px) {
+    .preview-workspace { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="preview-workspace">
+  <section class="preview-editor" aria-labelledby="editor-heading">
+    <h2 id="editor-heading">Post preview</h2>
+
+    <label for="draft-title">Title</label>
+    <input id="draft-title" type="text">
+
+    <label for="draft-date">Post date</label>
+    <input id="draft-date" type="date">
+
+    <label for="draft-summary">Summary</label>
+    <textarea id="draft-summary" rows="3"></textarea>
+
+    <label for="draft-cover">Cover image from your computer</label>
+    <input id="draft-cover" type="file" accept="image/*">
+
+    <label for="draft-body">Post body (Markdown)</label>
+    <textarea id="draft-body" rows="16"
+      placeholder="## Section heading&#10;&#10;Write or paste your post here.&#10;&#10;---"></textarea>
+
+    <label for="draft-image">Insert an image into the body</label>
+    <input id="draft-image" type="file" accept="image/*">
+
+    <p id="preview-status" role="status"></p>
+  </section>
+
+  <section class="preview-result" aria-label="Rendered post preview">
+    <article class="post">
+      <header class="post-header">
+        <p class="eyebrow"><time id="preview-date" hidden></time></p>
+        <h1 id="preview-title">Your post title</h1>
+      </header>
+
+      <img id="preview-cover" class="post-cover" alt="" hidden>
+
+      <aside id="preview-summary-box" class="post-summary"
+             aria-labelledby="preview-summary-heading" hidden>
+        <h2 id="preview-summary-heading">Summary</h2>
+        <p id="preview-summary" style="white-space: pre-line"></p>
+      </aside>
+
+      <div id="preview-body" class="prose"></div>
+    </article>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/dist/markdown-it.min.js"></script>
+<script>
+  const byId = (id) => document.getElementById(id);
+  const title = byId('draft-title');
+  const date = byId('draft-date');
+  const summary = byId('draft-summary');
+  const cover = byId('draft-cover');
+  const body = byId('draft-body');
+  const inlineImage = byId('draft-image');
+  const previewCover = byId('preview-cover');
+  const previewBody = byId('preview-body');
+  const status = byId('preview-status');
+
+  // Render Markdown while treating pasted HTML as plain text.
+  const markdown = window.markdownit
+    ? window.markdownit({ html: false })
+    : null;
+
+  const localImages = new Map();
+  let coverUrl;
+
+  function render() {
+    byId('preview-title').textContent = title.value.trim() || 'Your post title';
+    byId('preview-summary').textContent = summary.value;
+    byId('preview-summary-box').hidden = !summary.value.trim();
+
+    const previewDate = byId('preview-date');
+    previewDate.hidden = !date.value;
+    previewDate.dateTime = date.value;
+    previewDate.textContent = date.value
+      ? new Date(date.value + 'T12:00:00').toLocaleDateString('en-US', {
+          month: 'long', day: 'numeric', year: 'numeric'
+        })
+      : '';
+
+    if (!markdown) {
+      previewBody.textContent = body.value;
+      status.textContent = 'Markdown formatting could not load. The body is shown as plain text.';
+      return;
+    }
+
+    const template = document.createElement('template');
+    template.innerHTML = markdown.render(body.value);
+
+    for (const image of template.content.querySelectorAll('img')) {
+      const src = image.getAttribute('src');
+      if (localImages.has(src)) image.src = localImages.get(src);
+    }
+
+    previewBody.replaceChildren(template.content);
+  }
+
+  for (const field of [title, date, summary, body]) {
+    field.addEventListener('input', render);
+  }
+
+  cover.addEventListener('change', () => {
+    if (coverUrl) URL.revokeObjectURL(coverUrl);
+    const file = cover.files[0];
+    coverUrl = file ? URL.createObjectURL(file) : undefined;
+
+    if (coverUrl) {
+      previewCover.src = coverUrl;
+    } else {
+      previewCover.removeAttribute('src');
+    }
+    previewCover.hidden = !coverUrl;
+  });
+
+  inlineImage.addEventListener('change', () => {
+    const file = inlineImage.files[0];
+    if (!file) return;
+
+    const key = 'local-preview-image-' + (localImages.size + 1);
+    localImages.set(key, URL.createObjectURL(file));
+    body.setRangeText(
+      '\n\n![Describe this image](' + key + ')\n\n',
+      body.selectionStart,
+      body.selectionEnd,
+      'end'
+    );
+    inlineImage.value = '';
+    body.focus();
+    render();
+  });
+
+  render();
+</script>
