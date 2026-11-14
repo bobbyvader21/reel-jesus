@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+
 <section class="hero" aria-labelledby="home-title">
   <div class="hero-copy">
     <h1 id="home-title">{{ site.title | escape }}</h1>
@@ -16,14 +17,22 @@ layout: default
 
 <section class="feed" id="posts" aria-labelledby="posts-title">
   <h2 id="posts-title">Latest posts</h2>
+
   <div class="post-grid">
-    {% for post in site.posts %}
+    {% for post in site.posts limit:3 %}
       <article class="card">
         {% if post.cover and post.cover != empty %}
-          <img src="{{ post.cover | relative_url | escape }}" alt="{{ post.cover_alt | escape }}" loading="lazy">
+          <img
+            src="{{ post.cover | relative_url | escape }}"
+            alt="{{ post.cover_alt | escape }}"
+            loading="lazy"
+          >
         {% endif %}
+
         <div class="card-body">
-          <time datetime="{{ post.date | date: '%Y-%m-%d' }}">{{ post.date | date: '%B %d, %Y' }}</time>
+          <time datetime="{{ post.date | date: '%Y-%m-%d' }}">
+            {{ post.date | date: '%B %d, %Y' }}
+          </time>
           <h3><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a></h3>
           {% if post.summary and post.summary != empty %}
             <p>{{ post.summary | escape }}</p>
@@ -34,4 +43,8 @@ layout: default
       <p>No posts yet. Check back soon.</p>
     {% endfor %}
   </div>
+
+  {% if site.posts.size > 3 %}
+    <p><a class="button" href="{{ '/posts/' | relative_url }}">All posts →</a></p>
+  {% endif %}
 </section>
