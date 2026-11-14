@@ -9,6 +9,7 @@
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+
   <header class="site-header wrap">
     <a class="brand" href="{{ '/' | relative_url }}">
       <img
@@ -20,11 +21,13 @@
       >
       {{ site.title | escape }}
     </a>
-    <a href="{{ '/' | relative_url }}#posts">All posts</a>
+    <a href="{{ '/posts/' | relative_url }}">All posts</a>
   </header>
+
   <main class="wrap" id="main">
     {{ content }}
   </main>
+
   <footer class="site-footer wrap">
     <span>Created by RBC Studios</span>
     <span>{{ site.author | escape }}</span>
